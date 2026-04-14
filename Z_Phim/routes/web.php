@@ -16,11 +16,10 @@ Route::get('/', function () {
 Route::redirect('/admin/dashboard', '/admin');
 
 Route::middleware('auth')->group(function () {
-    // Movies - Use 3D Gallery by default
+    // Movies
     Route::get('/movies', function () {
-        return view('movies.index-3d');
+        return view('movies.index');
     })->name('movies.index');
-    Route::get('/movies-legacy', [WebMovieController::class, 'index'])->name('movies.legacy');
     Route::get('/movies/{movie}', [WebMovieController::class, 'show'])->name('movies.show');
     Route::get('/movies/{movie}/showtimes/{showtime}/seats', [WebMovieController::class, 'seats'])->name('movies.seats');
 
@@ -36,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/{booking}/checkout', [WebPaymentController::class, 'checkout'])->name('payments.checkout');
     Route::post('/payments/{booking}/complete', [WebPaymentController::class, 'complete'])->name('payments.complete');
 
-    // Admin routes - Use 3D Dashboard by default
+    // Admin routes
     Route::middleware('can:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', function () {
             $stats = [
@@ -45,9 +44,8 @@ Route::middleware('auth')->group(function () {
                 'bookings' => \App\Models\Booking::count(),
                 'total_revenue' => \App\Models\Payment::where('status', 'completed')->sum('amount'),
             ];
-            return view('admin.dashboard-3d', compact('stats'));
+            return view('admin.dashboard', compact('stats'));
         })->name('dashboard');
-        Route::get('/legacy', [AdminController::class, 'dashboard'])->name('dashboard.legacy');
         Route::get('/movies', [AdminController::class, 'indexMovies'])->name('movies.index');
         Route::get('/movies/create', [AdminController::class, 'createMovie'])->name('movies.create');
         Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');
