@@ -1,0 +1,64 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+  /* Modern Font Stack */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Outfit', 'Inter', sans-serif;
+
+  /* Cinema Palette */
+  --color-cinema-primary: #6366f1; /* Indigo 500 */
+  --color-cinema-secondary: #ec4899; /* Pink 500 */
+  --color-cinema-dark: #0f172a; /* Slate 900 */
+  --color-cinema-black: #020617; /* Slate 950 */
+  
+  /* Glassmorphism Utilities */
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-slate-900/70 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+  
+  .glass-nav {
+    @apply bg-slate-950/80 backdrop-blur-lg border-b border-white/5;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-500 transition-all duration-300 shadow-lg shadow-indigo-500/25 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-2.5 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-300 border border-white/10 active:scale-95;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+  }
+}
+
+body {
+  @apply bg-slate-950 text-slate-200 selection:bg-indigo-500/30;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-950;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+}
