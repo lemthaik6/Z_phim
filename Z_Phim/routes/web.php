@@ -17,9 +17,7 @@ Route::redirect('/admin/dashboard', '/admin');
 
 Route::middleware('auth')->group(function () {
     // Movies
-    Route::get('/movies', function () {
-        return view('movies.index');
-    })->name('movies.index');
+    Route::get('/movies', [WebMovieController::class, 'index'])->name('movies.index');
     Route::get('/movies/{movie}', [WebMovieController::class, 'show'])->name('movies.show');
     Route::get('/movies/{movie}/showtimes/{showtime}/seats', [WebMovieController::class, 'seats'])->name('movies.seats');
 
