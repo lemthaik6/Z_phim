@@ -45,14 +45,88 @@
             background: linear-gradient(180deg, #8b5cf6, #06b6d4);
         }
 
+        /* Stats Grid Layout */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
         .stat-card {
             animation: slideInUp 0.6s ease-out forwards;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+        }
+
+        .stat-card:hover {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 1) 0%, rgba(20, 30, 50, 0.8) 100%);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2),
+                        0 0 60px rgba(99, 102, 241, 0.1);
         }
 
         .stat-card:nth-child(1) { animation-delay: 0.1s; }
         .stat-card:nth-child(2) { animation-delay: 0.2s; }
         .stat-card:nth-child(3) { animation-delay: 0.3s; }
         .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .stat-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #e2e8f0;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-3d {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card-3d:hover {
+            transform: translateY(-4px);
+        }
 
         @keyframes slideInUp {
             from {
@@ -104,7 +178,7 @@
     <div class="container-3d pt-32">
         <!-- Header -->
         <div class="header-3d mb-16">
-            <h1 class="text-5xl md:text-6xl font-black mb-4">TRUNG TÂM QUẢN TRỊ 3D</h1>
+            <h1 class="text-5xl md:text-6xl font-black mb-4">TRUNG TÂM QUẢN TRỊ Z-PHIM</h1>
             <p class="text-xl text-slate-400 font-light">Giám sát hệ thống rạp phim với công nghệ ba chiều</p>
         </div>
 
@@ -113,49 +187,49 @@
             <!-- Total Movies -->
             <div class="card-3d stat-card">
                 <div class="stat-icon">
-                    <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16m10-16v16M4 4h16m0 16H4"></path>
                     </svg>
                 </div>
-                <p class="stat-label mb-2">Tổng phim</p>
-                <p class="stat-number" data-target="{{ $stats['movies'] ?? 0 }}">0</p>
-                <p class="text-sm text-slate-500 font-medium">trong thư viện</p>
+                <p class="stat-label mb-3">📽️ Tổng Phim</p>
+                <p class="stat-number">{{ $stats['movies'] ?? 0 }}</p>
+                <p class="text-xs text-slate-400 font-medium mt-2">trong thư viện</p>
             </div>
 
             <!-- Active Showtimes -->
             <div class="card-3d stat-card">
                 <div class="stat-icon">
-                    <svg class="w-10 h-10 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <p class="stat-label mb-2">Suất chiếu</p>
-                <p class="stat-number" data-target="{{ $stats['showtimes'] ?? 0 }}">0</p>
-                <p class="text-sm text-slate-500 font-medium">đang hoạt động</p>
+                <p class="stat-label mb-3">⏰ Suất Chiếu</p>
+                <p class="stat-number">{{ $stats['showtimes'] ?? 0 }}</p>
+                <p class="text-xs text-slate-400 font-medium mt-2">đang hoạt động</p>
             </div>
 
             <!-- Total Bookings -->
             <div class="card-3d stat-card">
                 <div class="stat-icon">
-                    <svg class="w-10 h-10 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m-4 3v2m4 3v2M9 5l1 12a2 2 0 002 2h2a2 2 0 002-2l1-12M9 5a2 2 0 002-2h2a2 2 0 012 2m0 0H7m6 4l-1 8m-4-8l1 8"></path>
                     </svg>
                 </div>
-                <p class="stat-label mb-2">Đặt chỗ</p>
-                <p class="stat-number" data-target="{{ $stats['bookings'] ?? 0 }}">0</p>
-                <p class="text-sm text-slate-500 font-medium">tổng cộng</p>
+                <p class="stat-label mb-3">🎫 Đặt Chỗ</p>
+                <p class="stat-number">{{ $stats['bookings'] ?? 0 }}</p>
+                <p class="text-xs text-slate-400 font-medium mt-2">tổng cộng</p>
             </div>
 
             <!-- Total Revenue -->
             <div class="card-3d stat-card">
                 <div class="stat-icon">
-                    <svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <p class="stat-label mb-2">Doanh thu</p>
-                <p class="stat-number" data-target="{{ intval($stats['total_revenue'] ?? 0) }}">$0</p>
-                <p class="text-sm text-slate-500 font-medium">tổng cộng</p>
+                <p class="stat-label mb-3">💰 Doanh Thu</p>
+                <p class="stat-number">${{ number_format($stats['total_revenue'] ?? 0, 2) }}</p>
+                <p class="text-xs text-slate-400 font-medium mt-2">tổng cộng</p>
             </div>
         </div>
 
@@ -167,28 +241,28 @@
                 <p class="text-slate-400 text-sm mb-8">Giám sát tình trạng hoạt động</p>
                 
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700">
-                        <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-between p-5 rounded-xl bg-gradient-to-r from-slate-800/50 to-slate-700/30 border border-emerald-500/20 hover:border-emerald-500/40 transition-all">
+                        <div class="flex items-center gap-4">
                             <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-slate-300 font-medium">Dịch vụ chính</span>
+                            <span class="text-slate-200 font-semibold text-lg">🔧 Dịch vụ chính</span>
                         </div>
-                        <span class="text-emerald-400 font-bold text-sm">ONLINE</span>
+                        <span class="status-badge online">● ONLINE</span>
                     </div>
 
-                    <div class="flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700">
-                        <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-between p-5 rounded-xl bg-gradient-to-r from-slate-800/50 to-slate-700/30 border border-emerald-500/20 hover:border-emerald-500/40 transition-all">
+                        <div class="flex items-center gap-4">
                             <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-slate-300 font-medium">Cơ sở dữ liệu</span>
+                            <span class="text-slate-200 font-semibold text-lg">💾 Cơ sở dữ liệu</span>
                         </div>
-                        <span class="text-emerald-400 font-bold text-sm">ONLINE</span>
+                        <span class="status-badge online">● ONLINE</span>
                     </div>
 
-                    <div class="flex items-center justify-between p-4 rounded-lg bg-slate-800/50 border border-slate-700">
-                        <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-between p-5 rounded-xl bg-gradient-to-r from-slate-800/50 to-slate-700/30 border border-emerald-500/20 hover:border-emerald-500/40 transition-all">
+                        <div class="flex items-center gap-4">
                             <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-slate-300 font-medium">API Gateway</span>
+                            <span class="text-slate-200 font-semibold text-lg">⚡ API Gateway</span>
                         </div>
-                        <span class="text-emerald-400 font-bold text-sm">ONLINE</span>
+                        <span class="status-badge online">● ONLINE</span>
                     </div>
                 </div>
             </div>
