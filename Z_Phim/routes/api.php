@@ -6,7 +6,6 @@ use App\Http\Controllers\API\MovieController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\SeatController;
 use App\Http\Controllers\API\ShowtimeController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::name('api.')->group(function () {

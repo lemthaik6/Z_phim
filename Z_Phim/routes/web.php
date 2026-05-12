@@ -35,15 +35,7 @@ Route::middleware('auth')->group(function () {
 
     // Admin routes
     Route::middleware('can:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', function () {
-            $stats = [
-                'movies' => \App\Models\Movie::count(),
-                'showtimes' => \App\Models\Showtime::count(),
-                'bookings' => \App\Models\Booking::count(),
-                'total_revenue' => \App\Models\Payment::where('status', 'completed')->sum('amount'),
-            ];
-            return view('admin.dashboard', compact('stats'));
-        })->name('dashboard');
+        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/movies', [AdminController::class, 'indexMovies'])->name('movies.index');
         Route::get('/movies/create', [AdminController::class, 'createMovie'])->name('movies.create');
         Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');

@@ -1,0 +1,277 @@
+/* 3D Movie Theater Styles */
+
+:root {
+    --color-primary: #6366f1;
+    --color-secondary: #8b5cf6;
+    --color-accent: #06b6d4;
+    --color-dark: #0f172a;
+    --color-darker: #020617;
+}
+
+/* Container 3D */
+.container-3d {
+    max-width: 90rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* Header 3D */
+.header-3d {
+    text-align: center;
+    position: relative;
+    z-index: 20;
+}
+
+.header-3d h1 {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.2);
+    }
+}
+
+/* 3D Card Styles */
+.card-3d {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    border-radius: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-style: preserve-3d;
+}
+
+.card-3d:hover {
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.1), 
+                0 0 60px rgba(99, 102, 241, 0.1);
+}
+
+/* Movies Grid */
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Movie Card */
+.movie-card-3d {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5) rotateX(-20deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotateX(0);
+    }
+}
+
+.movie-card-3d:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.2),
+                0 0 80px rgba(99, 102, 241, 0.1);
+    transform: translateY(-4px);
+}
+
+.movie-poster {
+    position: relative;
+    overflow: hidden;
+    height: 16rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.movie-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease-out;
+}
+
+.movie-card-3d:hover .movie-poster img {
+    transform: scale(1.05);
+}
+
+.movie-info {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 12rem;
+}
+
+.movie-title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.movie-desc {
+    font-size: 0.875rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    flex: 1;
+}
+
+/* Button 3D */
+.btn-3d {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.btn-3d::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-3d:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-3d:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.3);
+}
+
+.btn-3d:active {
+    transform: translateY(0);
+}
+
+/* Loader 3D */
+.loader-3d {
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid rgba(99, 102, 241, 0.1);
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Filter Section */
+.movie-filter {
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #334155;
+    border-radius: 0.5rem;
+    color: #94a3b8;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.filter-btn:hover {
+    color: white;
+    border-color: #6366f1;
+}
+
+.filter-btn.active {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+
+    .header-3d h1 {
+        font-size: 2rem;
+    }
+
+    .movie-info {
+        height: 10rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .header-3d h1 {
+        font-size: 1.5rem;
+    }
+}

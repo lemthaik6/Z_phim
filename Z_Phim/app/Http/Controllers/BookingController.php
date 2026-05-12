@@ -18,7 +18,7 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        if ($booking->user_id !== auth()->id()) {
+        if ($booking->user_id !== auth()->user()->id) {
             abort(403);
         }
 
@@ -29,7 +29,7 @@ class BookingController extends Controller
 
     public function cancel(Booking $booking)
     {
-        if ($booking->user_id !== auth()->id()) {
+        if ($booking->user_id !== auth()->user()->id) {
             abort(403);
         }
 
