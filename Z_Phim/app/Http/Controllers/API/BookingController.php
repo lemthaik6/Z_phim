@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
+use App\Models\BookingComboItem;
 use App\Models\Seat;
 use App\Models\Showtime;
 use App\Services\SeatLockManager;
@@ -26,23 +27,60 @@ class BookingController extends Controller
             }
         }
 
-        $totalAmount = $seats->sum(function ($seat) use ($showtime) {
+        $seatTotal = $seats->sum(function ($seat) use ($showtime) {
             return $seat->type === 'vip' ? $showtime->price * 1.5 : $showtime->price;
         });
 
+        $comboAmount = 0;
+        $availableCombos = collect(config('combos.items'))->keyBy('id');
+        $comboItems = [];
+
+        foreach ($request->input('combos', []) as $combo) {
+            if (!is_array($combo) || empty($combo['id']) || empty($combo['quantity'])) {
+                continue;
+            }
+
+            $quantity = intval($combo['quantity']);
+            if ($quantity < 1 || !$availableCombos->has($combo['id'])) {
+                continue;
+            }
+
+            $definition = $availableCombos->get($combo['id']);
+            $itemTotal = $definition['price'] * $quantity;
+            $comboItems[] = [
+                'item_id' => $definition['id'],
+                'name' => $definition['name'],
+                'type' => $definition['type'],
+                'quantity' => $quantity,
+                'unit_price' => $definition['price'],
+                'total_price' => $itemTotal,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+            $comboAmount += $itemTotal;
+        }
+
+        $totalAmount = $seatTotal + $comboAmount;
         $booking = null;
 
-        DB::transaction(function () use ($request, $showtime, $seats, $totalAmount, &$booking) {
+        DB::transaction(function () use ($request, $showtime, $seats, $seatTotal, $comboAmount, &$booking, $comboItems) {
             $booking = Booking::create([
                 'user_id' => $request->user()->id,
                 'showtime_id' => $showtime->id,
-                'total_amount' => $totalAmount,
+                'total_amount' => $seatTotal + $comboAmount,
                 'status' => 'pending',
             ]);
 
             foreach ($seats as $seat) {
                 $price = $seat->type === 'vip' ? $showtime->price * 1.5 : $showtime->price;
                 $booking->seats()->attach($seat->id, ['price' => $price]);
+            }
+
+            if (!empty($comboItems)) {
+                foreach ($comboItems as &$item) {
+                    $item['booking_id'] = $booking->id;
+                }
+                BookingComboItem::insert($comboItems);
             }
 
             // Lock seats for 5 minutes
@@ -63,7 +101,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $bookings = $request->user()->bookings()
-            ->with(['showtime.movie', 'showtime.room.cinema', 'seats', 'payments'])
+            ->with(['showtime.movie', 'showtime.room.cinema', 'seats', 'payments', 'comboItems'])
             ->latest('created_at')
             ->paginate(10);
 
@@ -76,7 +114,7 @@ class BookingController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        $booking->load(['showtime.movie', 'showtime.room.cinema', 'seats', 'payments']);
+        $booking->load(['showtime.movie', 'showtime.room.cinema', 'seats', 'payments', 'comboItems']);
 
         return new BookingResource($booking);
     }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\BookingDetail;
+use App\Models\BookingComboItem;
 use App\Models\Payment;
 
 class Booking extends Model
@@ -49,6 +50,21 @@ class Booking extends Model
     public function bookingDetails(): HasMany
     {
         return $this->hasMany(BookingDetail::class);
+    }
+
+    public function comboItems(): HasMany
+    {
+        return $this->hasMany(BookingComboItem::class);
+    }
+
+    public function getSeatTotalAttribute(): float
+    {
+        return $this->bookingDetails->sum('price');
+    }
+
+    public function getComboTotalAttribute(): float
+    {
+        return $this->comboItems->sum('total_price');
     }
 
     public function payments(): HasMany

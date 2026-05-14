@@ -14,6 +14,10 @@ Route::name('api.')->group(function () {
     Route::apiResource('showtimes', ShowtimeController::class)->only(['index', 'show']);
     Route::get('showtimes/{showtime}/seats', [SeatController::class, 'getSeatsByShowtime']);
 
+    // Payment gateway callbacks
+    Route::any('payments/momo/callback', [PaymentController::class, 'momoCallback'])->name('payment.webhook.momo');
+    Route::any('payments/vnpay/callback', [PaymentController::class, 'vnpayCallback'])->name('payment.webhook.vnpay');
+
     // Auth routes
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);

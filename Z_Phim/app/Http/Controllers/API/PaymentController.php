@@ -7,7 +7,10 @@ use App\Http\Requests\PaymentRequest;
 use App\Http\Resources\PaymentResource;
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Services\PaymentGateways\MoMoGateway;
+use App\Services\PaymentGateways\VNPayGateway;
 use App\Services\SeatLockManager;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -115,6 +118,62 @@ class PaymentController extends Controller
         });
 
         return response()->json(['message' => 'Booking cancelled successfully']);
+    }
+
+    /**
+     * Gateway callback from MoMo
+     */
+    public function momoCallback(Request $request)
+    {
+        return $this->handleGatewayCallback($request, 'momo');
+    }
+
+    /**
+     * Gateway callback from VNPay
+     */
+    public function vnpayCallback(Request $request)
+    {
+        return $this->handleGatewayCallback($request, 'vnpay');
+    }
+
+    private function handleGatewayCallback(Request $request, string $gateway)
+    {
+        $bookingId = $request->input('booking_id');
+        $booking = Booking::findOrFail($bookingId);
+
+        $gatewayService = $this->makeGateway($gateway);
+        $result = $gatewayService->verify($request->all());
+
+        $payment = Payment::where('booking_id', $booking->id)->where('status', 'pending')->latest('created_at')->first();
+        if (!$payment) {
+            return redirect()->route('bookings.show', $booking)->with('error', 'Không tìm thấy giao dịch chờ thanh toán.');
+        }
+
+        if ($result['success'] === true) {
+            DB::transaction(function () use ($booking, $payment) {
+                $payment->update(['status' => 'completed']);
+                $booking->update([
+                    'status' => 'paid',
+                    'paid_at' => Carbon::now(),
+                    'locked_until' => null,
+                ]);
+            });
+
+            return redirect()->route('bookings.show', $booking)->with('success', 'Thanh toán thành công qua ' . strtoupper($gateway) . '.');
+        }
+
+        $payment->update(['status' => 'failed']);
+
+        return redirect()->route('bookings.show', $booking)->with('error', $result['message'] ?? 'Thanh toán thất bại.');
+    }
+
+    private function makeGateway(string $gateway)
+    {
+        if ($gateway === 'vnpay') {
+            return new VNPayGateway();
+        }
+
+        return new MoMoGateway();
     }
 
     /**

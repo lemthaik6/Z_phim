@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     // Bookings
     Route::get('/bookings', [WebBookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/{booking}', [WebBookingController::class, 'show'])->name('bookings.show');
+    Route::post('/bookings/{booking}/combos', [WebBookingController::class, 'addCombos'])->name('bookings.combos');
     Route::post('/bookings/{booking}/cancel', [WebBookingController::class, 'cancel'])->name('bookings.cancel');
 
     // Reviews
@@ -32,6 +33,7 @@ Route::middleware('auth')->group(function () {
     // Payments
     Route::get('/payments/{booking}/checkout', [WebPaymentController::class, 'checkout'])->name('payments.checkout');
     Route::post('/payments/{booking}/complete', [WebPaymentController::class, 'complete'])->name('payments.complete');
+    Route::post('/payments/{booking}/start-qr', [WebPaymentController::class, 'startQrPayment'])->name('payments.startQr');
 
     // Admin routes
     Route::middleware('can:admin')->prefix('admin')->name('admin.')->group(function () {
@@ -87,3 +89,5 @@ Route::post('/logout', function (\Illuminate\Http\Request $request) {
     $request->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
+
+Route::get('/payments/{booking}/confirm-qr/{payment}', [WebPaymentController::class, 'confirmQrPayment'])->name('payments.confirmQr');

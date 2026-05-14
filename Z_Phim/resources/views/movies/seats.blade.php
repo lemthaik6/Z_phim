@@ -93,6 +93,9 @@
                     Khi nhấn xác nhận, ghế của bạn sẽ được giữ trong 5 phút.<br>
                     Vui lòng hoàn tất thanh toán trong thời gian này.
                 </p>
+                <p class="text-center text-[10px] text-slate-400 mt-3">
+                    Bạn có thể thêm combo bắp ngô, nước và phụ kiện rạp phim ở trang chi tiết đơn hàng sau khi đặt vé.
+                </p>
             </div>
             
             <!-- Empty State for static view -->
